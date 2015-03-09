@@ -3,7 +3,8 @@ package jus.aor.mobilagent.kernel;
 import java.net.UnknownHostException;
 
 /**
- * Description d'un agent du modèle de bus à agents mobiles "BAM". Le constructeur d'un agent devra avoir la signature suivante : <bold>public XXXX(Object...)</bold>
+ * Description d'un agent du modèle de bus à agents mobiles "BAM". 
+ * Le constructeur d'un agent devra avoir la signature suivante : <bold>public XXXX(Object...)</bold>
  * @author  P.Morat
  */
 public interface _Agent extends java.io.Serializable, Runnable {
