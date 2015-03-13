@@ -71,6 +71,7 @@ public class Starter{
 			// déploiement d'agents
 			deployAgents();
 		}catch(Exception ex){
+			System.out.println(ex);
 			logger.log(Level.FINE,"Ce programme nécessite un argument : <conf file> <name server>",ex);
 			return;
 		}
