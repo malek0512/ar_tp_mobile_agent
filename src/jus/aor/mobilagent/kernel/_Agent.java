@@ -27,4 +27,9 @@ public interface _Agent extends java.io.Serializable, Runnable {
 	 * @param etape l'étape à ajouter
 	 */
 	public void addEtape(Etape etape);
+
+	/**
+	 * deplace 
+	 */
+	public void move();
 }
