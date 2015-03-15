@@ -11,7 +11,7 @@ public class AgentServer extends Thread{
 	//liste des services qu'offre le server
 	protected List<_Service> _services;
 	//le AgentClassLoader associé a ce server
-	protected BAMAgentClassLoader _agentClasseLoader
+	protected BAMAgentClassLoader _agentClasseLoader;
 	
 	/**
 	 * Initialise le server

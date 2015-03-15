@@ -58,8 +58,7 @@ public final class Server {
 	 */
 	public final void addService(String name, String classeName, String codeBase, Object... args) {
 		try {
-			//TODO verifier que c'est tout ce qui y a à mettre
-			this.agentServer.addService();
+			//TODO
 		}catch(Exception ex){
 			logger.log(Level.FINE," erreur durant le lancement du serveur"+this,ex);
 			return;
@@ -75,16 +74,7 @@ public final class Server {
 	 */
 	public final void deployAgent(String classeName, Object[] args, String codeBase, List<String> etapeAddress, List<String> etapeAction) {
 		try {
-			//TODO remplacer ces null par le bon truc, mais quoi ??? :(
-			//création de la route
-			Route route;
-			route = new Route(new Etape(new URI(etapeAddress.get(0)), null));
-			for(int i = 1; i<etapeAction.size(); i++)
-			{
-				route.add(new Etape(new URI(etapeAddress.get(i)), null));
-			}
-			//création et execution de l'agent 
-			new Agent(route).execute();
+			// zzz
 		}catch(Exception ex){
 			logger.log(Level.FINE," erreur durant le lancement du serveur"+this,ex);
 			return;
