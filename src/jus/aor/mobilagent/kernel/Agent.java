@@ -2,6 +2,13 @@ package jus.aor.mobilagent.kernel;
 
 public class Agent implements _Agent{
 
+	//route que l'agent doit suivre
+	Route _route;
+	
+	public Agent()
+	{
+	}
+	
 	@Override
 	public void run() {
 		// TODO Auto-generated method stub
@@ -23,6 +30,17 @@ public class Agent implements _Agent{
 
 	@Override
 	public void addEtape(Etape etape) {
+		_route.add(etape);
+	}
+
+	@Override
+	public void move() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void execute() {
 		// TODO Auto-generated method stub
 		
 	}

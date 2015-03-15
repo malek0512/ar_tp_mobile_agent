@@ -29,7 +29,7 @@ public final class Server {
 	protected Logger logger=null;
 	/**
 	 * Démarre un serveur de type mobilagent 
-	 * @param port le port d'écuote du serveur d'agent 
+	 * @param port le port d'écoute du serveur d'agent 
 	 * @param name le nom du serveur
 	 */
 	public Server(final int port, final String name){
@@ -40,7 +40,8 @@ public final class Server {
 			loggerName = "jus/aor/mobilagent/"+InetAddress.getLocalHost().getHostName()+"/"+this.name;
 			logger=Logger.getLogger(loggerName);
 			/* démarrage du server d'agents mobiles attaché à cette machine */
-			//A COMPLETER
+				//TODO vérifier si c'est tout ce qui y a à faire
+			new AgentServer(name, port).start();
 			/* temporisation de mise en place du server d'agents */
 			Thread.sleep(1000);
 		}catch(Exception ex){
@@ -57,7 +58,8 @@ public final class Server {
 	 */
 	public final void addService(String name, String classeName, String codeBase, Object... args) {
 		try {
-			//A COMPLETER
+			//TODO verifier que c'est tout ce qui y a à mettre
+			this.agentServer.addService();
 		}catch(Exception ex){
 			logger.log(Level.FINE," erreur durant le lancement du serveur"+this,ex);
 			return;
@@ -73,7 +75,16 @@ public final class Server {
 	 */
 	public final void deployAgent(String classeName, Object[] args, String codeBase, List<String> etapeAddress, List<String> etapeAction) {
 		try {
-			//A COMPLETER
+			//TODO remplacer ces null par le bon truc, mais quoi ??? :(
+			//création de la route
+			Route route;
+			route = new Route(new Etape(new URI(etapeAddress.get(0)), null));
+			for(int i = 1; i<etapeAction.size(); i++)
+			{
+				route.add(new Etape(new URI(etapeAddress.get(i)), null));
+			}
+			//création et execution de l'agent 
+			new Agent(route).execute();
 		}catch(Exception ex){
 			logger.log(Level.FINE," erreur durant le lancement du serveur"+this,ex);
 			return;
