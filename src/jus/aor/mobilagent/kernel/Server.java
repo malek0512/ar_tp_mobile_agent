@@ -27,6 +27,9 @@ public final class Server {
 	protected String loggerName;
 	/** le logger de ce serveur */
 	protected Logger logger=null;
+	/** Le classLoader pour les agents */
+	protected BAMAgentClassLoader loader;
+	
 	/**
 	 * Démarre un serveur de type mobilagent 
 	 * @param port le port d'écoute du serveur d'agent 
@@ -40,7 +43,9 @@ public final class Server {
 			loggerName = "jus/aor/mobilagent/"+InetAddress.getLocalHost().getHostName()+"/"+this.name;
 			logger=Logger.getLogger(loggerName);
 			/* démarrage du server d'agents mobiles attaché à cette machine */
-				//TODO vérifier si c'est tout ce qui y a à faire
+			
+			//TODO vérifier si c'est tout ce qui y a à faire
+			
 			new AgentServer(name, port).start();
 			/* temporisation de mise en place du server d'agents */
 			Thread.sleep(1000);

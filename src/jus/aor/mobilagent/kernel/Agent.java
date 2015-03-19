@@ -3,7 +3,7 @@ package jus.aor.mobilagent.kernel;
 public class Agent implements _Agent{
 
 	//route que l'agent doit suivre
-	Route _route;
+	protected Route _route;
 	
 	public Agent()
 	{

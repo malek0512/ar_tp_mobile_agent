@@ -13,31 +13,29 @@ import jus.aor.mobilagent.kernel.Agent;
  * Classe de test élémentaire pour le bus à agents mobiles
  * @author  Morat
  */
-public class Hello extends Agent{
+public class Hello extends Agent {
 
+	private _Action action = new _Action() {
+		private static final long serialVersionUID = 1L;
+		public void execute() {
+			this.execute();
+			System.out.println("Hello action !");
+		}
+	};
+	
 	/**
 	* construction d'un agent de type hello.
 	* @param args aucun argument n'est requis
 	*/
 	public Hello(Object... args) {
-		
-	}
-	
-	/**
-	* l'action à entreprendre sur les serveurs visités  
-	*/
-	@Override
-	public void execute() {
-		// TODO Auto-generated method stub
-		
-		
+		super();
 	}
 	
 	/* (non-Javadoc)
 	 * @see jus.aor.mobilagent.kernel.Agent#retour()
 	 */
-	protected _Action retour(){
-		// return ...;
-		return null;
+	protected _Action retour() {
+		return this.action;
 	}
-};
+	
+}

@@ -1,5 +1,6 @@
 package jus.aor.mobilagent.kernel;
 
+import java.util.LinkedList;
 import java.util.List;
 
 public class AgentServer extends Thread{
@@ -22,6 +23,7 @@ public class AgentServer extends Thread{
 	{
 		_port = port;
 		_name = name;
+		_services = new LinkedList<>();
 	}
 	
 	/**

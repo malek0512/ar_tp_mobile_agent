@@ -10,11 +10,12 @@ import java.io.Serializable;
  * @author  Morat
  */
 public interface _Action extends Serializable{
+	
 	/** l'action vide */
 	public static final _Action NIHIL = new _Action() {
-		@Override
+		private static final long serialVersionUID = 1L;
 		public void execute() {
-			//nothing to do
+			System.out.println("Empty action , I do nothing");
 		}
 	};
 	
@@ -22,4 +23,5 @@ public interface _Action extends Serializable{
 	 * Exécute l'action
 	 */
 	public void execute();
+	
 }

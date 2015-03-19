@@ -4,6 +4,7 @@
 package jus.aor.mobilagent.kernel;
 
 import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.InetAddress;
@@ -47,7 +48,8 @@ public class Starter{
 		// r√©cup√©ration du niveau de log
 		java.util.logging.Level level;
 		try {
-			level = Level.parse(System.getProperty("LEVEL"));			
+			level = Level.parse(System.getProperty("LEVEL"));	
+//			level = java.util.logging.Level.FINE;
 		}catch(NullPointerException e) {
 			level=java.util.logging.Level.OFF;
 		}catch(IllegalArgumentException e) {
@@ -57,7 +59,7 @@ public class Starter{
 			/* Mise en place du logger pour tracer l'application */
 			String loggerName = "jus/aor/mobilagent/"+InetAddress.getLocalHost().getHostName()+"/"+args[1];
 			logger = Logger.getLogger(loggerName);
-//			logger.setUseParentHandlers(false);
+			logger.setUseParentHandlers(false);
 			logger.addHandler(new IOHandler());
 			logger.setLevel(level);
 			/* R√©cup√©ration d'informations de configuration */
@@ -76,14 +78,41 @@ public class Starter{
 			return;
 		}
 	}
+	
+	/**
+	 * Instancie un server a travers l'introspection de classe Server dans le .jar MobilagentServer.jar
+	 * @param port
+	 * @param name
+	 * @throws MalformedURLException
+	 * @throws ClassNotFoundException
+	 * @throws InstantiationException
+	 * @throws IllegalAccessException
+	 * @throws IllegalArgumentException
+	 * @throws InvocationTargetException
+	 * @throws NoSuchMethodException
+	 * @throws SecurityException
+	 */
 	@SuppressWarnings("unchecked")
 	protected void createServer(int port, String name) throws MalformedURLException, ClassNotFoundException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
-		loader = new BAMServerClassLoader(new URL[]{new URL("file:///.../MobilagentServer.jar")});
-		classe = (Class<jus.aor.mobilagent.kernel.Server>)Class.forName("jus.aor.mobilagent.kernel.Server",true,loader);
+		//Charge le .jar du Server qui doit etre nommÈ MobilagentServer.jar
+//		loader = new BAMServerClassLoader(new URL[]{new URL("file:///.../MobilagentServer.jar")});
+		
+		//Modified by malek
+//		loader = new BAMServerClassLoader(new URL[]{new URL(doc.getElementsByTagName("jar").item(0).getAttributes().getNamedItem("value").getNodeValue())});
+		try {
+			loader = new BAMServerClassLoader(new URL[]{new URL("file:/"+System.getProperty("user.dir")+"/MobilagentServer.jar")});
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		//Cherche la classe Server dedans
+		classe = (Class<jus.aor.mobilagent.kernel.Server>) Class.forName("jus.aor.mobilagent.kernel.Server",true,loader);
+		//instancie un server par un appel au constructeur
 		server = classe.getConstructor(int.class,String.class).newInstance(port,name);
 	}
+	
 	/**
-	 * Ajoute les services d√©finis dans le fichier de configuration
+	 * Ajoute les services d√©finis dans le fichier de configuration xml passÈ en argument "Document doc;"
 	 */
 	protected void addServices() {
 		NamedNodeMap attrs;
@@ -121,7 +150,13 @@ public class Starter{
 		String codeBase;
 		String classeName;
 		List<String> serverAddress=new LinkedList<String>(), serverAction=new LinkedList<String>();
-		
+
+		// XML example
+		//	<agent>
+		//		<agent class="jus.aor.mobilagent.hello.Hello" codebase=".../Hello.jar" args="">
+		//		<etape server="mobilagent://...:222/" action="doIt" />
+		//		<etape server="mobilagent://...:333/" action="doIt" />
+		//	</agent>
 		for(Node  item1 : iterable(doc,"agent")) {
 			attrsAgent = item1.getAttributes();
 			codeBase = attrsAgent.getNamedItem("codebase").getNodeValue();
@@ -150,6 +185,9 @@ public class Starter{
 			logger.log(Level.FINE," erreur durant le d√©ploiement de l'agent",e);
 		}
 	}
+	
+	//Use example : iterable(Document doc, "service") renvoie un itÈrator de tous les tag "service"
+	//Use example : iterable(Element e, "service") renvoie un itÈrator de tous les tag "service"
 	private static Iterable<Node> iterable(final Node racine, final String element){
 		return new Iterable<Node>() {
 			@Override
@@ -158,10 +196,10 @@ public class Starter{
 					NodeList nodelist;
 					int current = 0, length;
 					{ //init
-						try{
-							nodelist = ((Document)racine).getElementsByTagName(element);
+						try{ 
+							nodelist = ((Document)racine).getElementsByTagName(element); // si racine est un document
 						}catch(ClassCastException e){
-							nodelist = ((Element)racine).getElementsByTagName(element);
+							nodelist = ((Element)racine).getElementsByTagName(element); // si racine est un element 
 						}
 						length = nodelist.getLength();
 					}
@@ -180,7 +218,9 @@ public class Starter{
 	 * @param args
 	 */
 	public static void main(String... args) {
-		if(System.getSecurityManager() == null)System.setSecurityManager(new RMISecurityManager());
+		if(System.getSecurityManager() == null)
+			System.setSecurityManager(new RMISecurityManager());
+		
 		new Starter(args);
 	}
 }
