@@ -94,7 +94,7 @@ public class Starter{
 	 */
 	@SuppressWarnings("unchecked")
 	protected void createServer(int port, String name) throws MalformedURLException, ClassNotFoundException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
-		//Charge le .jar du Server qui doit etre nommé MobilagentServer.jar
+		//Charge le .jar du Server qui doit etre nommï¿½ MobilagentServer.jar
 //		loader = new BAMServerClassLoader(new URL[]{new URL("file:///.../MobilagentServer.jar")});
 		
 		//Modified by malek
@@ -112,7 +112,7 @@ public class Starter{
 	}
 	
 	/**
-	 * Ajoute les services dÃ©finis dans le fichier de configuration xml passé en argument "Document doc;"
+	 * Ajoute les services dÃ©finis dans le fichier de configuration xml passï¿½ en argument "Document doc;"
 	 */
 	protected void addServices() {
 		NamedNodeMap attrs;
@@ -151,7 +151,7 @@ public class Starter{
 		String classeName;
 		List<String> serverAddress=new LinkedList<String>(), serverAction=new LinkedList<String>();
 
-		// XML example
+		// XML example : hello.client1.xml
 		//	<agent>
 		//		<agent class="jus.aor.mobilagent.hello.Hello" codebase=".../Hello.jar" args="">
 		//		<etape server="mobilagent://...:222/" action="doIt" />
@@ -186,8 +186,9 @@ public class Starter{
 		}
 	}
 	
-	//Use example : iterable(Document doc, "service") renvoie un itérator de tous les tag "service"
-	//Use example : iterable(Element e, "service") renvoie un itérator de tous les tag "service"
+	//Malek comments
+	//Use example : iterable(Document doc, "service") renvoie un itï¿½rator de tous les tag "service"
+	//Use example : iterable(Element e, "service") renvoie un itï¿½rator de tous les tag "service"
 	private static Iterable<Node> iterable(final Node racine, final String element){
 		return new Iterable<Node>() {
 			@Override

@@ -1,13 +1,8 @@
 package jus.aor.mobilagent.hello;
 
-import java.net.URI;
-import java.text.DateFormat;
-import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
-
-import jus.aor.mobilagent.kernel._Action;
 import jus.aor.mobilagent.kernel.Agent;
+import jus.aor.mobilagent.kernel._Action;
+import jus.aor.mobilagent.kernel.Route;
 
 /**
  * Classe de test élémentaire pour le bus à agents mobiles
@@ -15,7 +10,7 @@ import jus.aor.mobilagent.kernel.Agent;
  */
 public class Hello extends Agent {
 
-	private _Action action = new _Action() {
+	private _Action doIt = new _Action() {
 		private static final long serialVersionUID = 1L;
 		public void execute() {
 			this.execute();
@@ -35,7 +30,7 @@ public class Hello extends Agent {
 	 * @see jus.aor.mobilagent.kernel.Agent#retour()
 	 */
 	protected _Action retour() {
-		return this.action;
+		return this.doIt;
 	}
 	
 }

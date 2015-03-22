@@ -15,45 +15,16 @@ import java.util.jar.JarException;
  * @author alex
  *
  */
-public class BAMAgentClassLoader extends URLClassLoader {
+public class BAMAgentClassLoader extends BAMServerClassLoader {
 
-	private Map<String, Class> contents;
-	
-	public BAMAgentClassLoader(URL[] urls) throws JarException, IOException {
+	private ClassLoader parent = null;
+	public BAMAgentClassLoader(URL[] urls) {
 		super(urls);
-		contents = new HashMap<>();
-		
-		for(URL url : urls) 
-			addToContents(url);
-	}
-
-
-	/**
-	 * Le contenu d'un jar est fusionné avec les class pré chargés
-	 * @param url
-	 * @throws JarException
-	 * @throws IOException
-	 * @author MAMMAR
-	 */
-	public void addToContents (URL url ) throws JarException, IOException {
-		Jar jar = new Jar(url.getPath());
-		
-		for (Iterator it = jar.classIterator().iterator(); it.hasNext();) {
-			Entry<String, byte[]> entry = (Entry<String, byte[]>) it.next();
-			contents.put(entry.getKey(),  defineClass(entry.getKey(), entry.getValue(), 0, entry.getValue().length));
-		}
-	}
+	} 
 	
-	/**
-	 * @param classname
-	 * @return la classe associé a au nom classname
-	 * @author MAMMAR
-	 */
-	public Class getClass(String classname) {
-		if(contents.containsKey(classname))
-			return contents.get(classname);
-		
-		return null; 
+	public void setParent(ClassLoader parent) {
+		if (parent == null)
+			this.parent = parent;
+		throw new RuntimeException("BAMAgentClassLoader : a parent has already be defined");
 	}
-
 }
