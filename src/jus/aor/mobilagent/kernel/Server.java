@@ -74,6 +74,7 @@ public final class Server {
 			logger.log(Level.FINE," Adding a service ");
 			//On charge le code du service dans le BAMServerClassLoader
 			loader.addJar(new URL(codeBase));
+			
 			//On recupere l'objet class de la classe className du Jar
 			Class serviceClass = Class.forName(classeName, true, loader);
 			//On instancie ce service au sein d'un objet de type _Service
@@ -99,7 +100,7 @@ public final class Server {
 	 */
 	public final void deployAgent(String classeName, Object[] args, String codeBase, List<String> etapeAddress, List<String> etapeAction) {
 		try {
-			// zzz
+			// ze zuis zen
 			//Logger
 			System.out.println(" Deploying an agent ");
 			logger.log(Level.FINE," Deploying an agent ");
@@ -112,9 +113,9 @@ public final class Server {
 				agent.addEtape(new Etape(new URI(etapeAddress.get(i)), 
 						(_Action) Class.forName(etapeAction.get(i), true, agentLoader).
 						getConstructors()[0].
-						newInstance(null)));
+						newInstance((Object[]) null)));
 			}
-			
+			agent.run();
 		}catch(Exception ex){
 			logger.log(Level.FINE," erreur durant le lancement du serveur"+this,ex);
 			return;

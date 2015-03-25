@@ -16,10 +16,10 @@ public class BAMServerClassLoader extends URLClassLoader {
 	
 	public BAMServerClassLoader(URL[] urls) {
 		super(urls);
-		contents = new HashMap<>();
+//		contents = new HashMap<>();
 		
-		for(URL url : urls) 
-			addJar(url);
+//		for(URL url : urls) 
+//			addJar(url);
 	}
 
 	
@@ -31,17 +31,18 @@ public class BAMServerClassLoader extends URLClassLoader {
 	 * @author MAMMAR
 	 */
 	public void addJar (URL url ) {
-		Jar jar = null;
-		try {
-			jar = new Jar(url.getPath());
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		
-		for (Iterator it = jar.classIterator().iterator(); it.hasNext();) {
-			Entry<String, byte[]> entry = (Entry<String, byte[]>) it.next();
-			contents.put(entry.getKey(),  defineClass(entry.getValue(), 0, entry.getValue().length));
-		}
+		addURL(url);
+//		Jar jar = null;
+//		try {
+//			jar = new Jar(url.getPath());
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
+//		
+//		for (Iterator it = jar.classIterator().iterator(); it.hasNext();) {
+//			Entry<String, byte[]> entry = (Entry<String, byte[]>) it.next();
+//			contents.put(entry.getKey(),  defineClass(entry.getValue(), 0, entry.getValue().length));
+//		}
 	}
 	
 	/**
@@ -50,9 +51,11 @@ public class BAMServerClassLoader extends URLClassLoader {
 	 * @author MAMMAR
 	 */
 	public Class<?> getClass(String classname) {
-		if(contents.containsKey(classname))
-			return contents.get(classname);
-		
-		throw new RuntimeException("No class of that name found : "+classname);
+		return this.getClass(classname);
+//		if(contents.containsKey(classname))
+//			return contents.get(classname);
+//		
+//		throw new RuntimeException("No class of that name found : "+classname);
 	}
+	
 }
