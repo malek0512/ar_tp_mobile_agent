@@ -1,7 +1,11 @@
 package jus.aor.mobilagent.kernel;
 
-import java.util.LinkedList;
-import java.util.List;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.util.HashMap;
 
 public class AgentServer extends Thread{
 
@@ -9,8 +13,16 @@ public class AgentServer extends Thread{
 	protected int _port;
 	//nom du server
 	protected String _name;
+	protected ServerSocket _socketServer;
+
+	//TODEL voir la nouvelle def quelque ligne plus bas
 	//liste des services qu'offre le server
-	protected List<_Service> _services;
+	//protected List<_Service<?>> _services;
+	
+	//on a besoin de pouvoir identifier les service du coup j'ai rajouter le string T.T
+	//le string represente le classeName du service
+	protected HashMap<String, _Service<?>> _services;
+
 	//le AgentClassLoader associé a ce server
 	protected BAMAgentClassLoader _agentClasseLoader;
 	
@@ -19,28 +31,29 @@ public class AgentServer extends Thread{
 	 * @argument name : nom du server
 	 * @argument port : numero du port d'écoute
 	 */
-	public AgentServer(String name, int port)
+	public AgentServer(String name, int port,BAMAgentClassLoader loader)
 	{
 		_port = port;
 		_name = name;
-		_services = new LinkedList<>();
+		_services = new HashMap<String, _Service<?>>();
+		_agentClasseLoader = loader;
 	}
 	
 	/**
 	 * Ajoute un service sur le server
 	 */
-	public void addService(_Service service)
+	public void addService(_Service<?> service, String classeName)
 	{
-		_services.add(service);
+		_services.put(classeName,service);
 	}
 	
 	/**
-	 * Recupere le service demander ?
+	 * Recupere le service demander
+	 * @param classeName : le classeName du service a recuperer
 	 */
-	public _Service getService()
+	public _Service<?> getService(String classeName)
 	{
-		//TODO
-		return null;
+		return _services.get(classeName);
 	}
 
 	/**
@@ -48,7 +61,7 @@ public class AgentServer extends Thread{
 	 */
 	public void startAgent(_Agent agent)
 	{
-		agent.init(_agentClasseLoader, this, _name);
+		new Thread(agent).start();
 	}
 	
 	/**
@@ -56,6 +69,39 @@ public class AgentServer extends Thread{
 	 */
 	public void run()
 	{
-		//TODO
+		//on crée un socket
+		try {
+			_socketServer = new ServerSocket(_port);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		while(true)
+		{
+			try {
+			//on accept les connections
+			Socket  socketClient = _socketServer.accept();
+			//on instancie les streams
+			InputStream inStr;
+			inStr = socketClient.getInputStream();
+			ObjectInputStream objInputStr = new ObjectInputStream(inStr);
+			
+			//on recupere l'agent
+			_Agent agent = (_Agent) objInputStr.readObject();
+			//on initialise l'agent
+			agent.init(_agentClasseLoader,this,_name);
+			//enfin on demarre l'agent
+			startAgent(agent);
+			//on ferme les streams
+			objInputStr.close();
+			
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
+			}
+			
+			catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 }

@@ -1,6 +1,11 @@
 package jus.aor.mobilagent.kernel;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.io.OutputStream;
+import java.net.Socket;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.NoSuchElementException;
 
 import jus.aor.mobilagent.kernel.Server;
 
@@ -11,31 +16,38 @@ public class Agent implements _Agent{
 	protected BAMAgentClassLoader loader;
 	protected Jar jar;
 	protected AgentServer agentServer;
-	protected _Action doIt = _Action.NIHIL;
+	protected _Action doIt = _Action.NIHIL;//TODO je suis pas sur de son existance (alex)
 	
 	public Agent()
 	{
 		// TODO
-		_route = new Route(new Etape(new URI(agentServer._name+":"+agentServer._port), doIt));
-		jar = new Jar(fileName);
-		loader = new BAMAgentClassLoader(null);
+		/*
+		_route = new Route(new Etape(new URI(agentServer._name+":"+agentServer._port), doIt)); //ATTENTION !! agentServer est null !!
+		jar = new Jar(fileName); // y a pas de fileName xd mais why not
+		loader = new BAMAgentClassLoader(null); // le loader est transmit dans le init
+		*/
 	}
 	
 	@Override
 	public void run() {
-		// TODO Auto-generated method stub
+		//on execute l'action
+		this.execute();
+		
+		//on passe au prochain serveur
+		this.move();
 	}
 
 	@Override
 	public void init(AgentServer agentServer, String serverName) {
-		// TODO Auto-generated method stub
+		this.agentServer = agentServer;
 		
 	}
 
 	@Override
 	public void init(BAMAgentClassLoader loader, AgentServer server,
 			String serverName) {
-		// TODO Auto-generated method stub
+		this.loader = loader;
+		this.init(server,serverName);
 		
 	}
 
@@ -46,8 +58,31 @@ public class Agent implements _Agent{
 
 	@Override
 	public void move() {
-		// TODO Auto-generated method stub
-		
+		//on ne se deplace que si la feuille de route n'est pas epuiser
+		if(_route.hasNext())
+		{
+		//on crée une nouvelle connexion socket pour le prochain server
+		Socket sock;
+			//on initialise la connection
+			try {
+				
+				URI server = _route.get().getServer();
+				sock = new Socket(server.getHost(),server.getPort());
+				//on envoie l'agent sur le server
+				OutputStream outputStr;
+				outputStr = sock.getOutputStream();
+				ObjectOutputStream objOutputStr;
+			
+				objOutputStr = new ObjectOutputStream(outputStr);
+				objOutputStr.writeObject(this);  
+			}
+			catch (NoSuchElementException e){
+				e.printStackTrace();
+			}
+			catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
 	@Override
