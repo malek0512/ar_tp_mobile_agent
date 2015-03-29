@@ -19,7 +19,7 @@ public final class Server {
 	/** le nom logique du serveur */
 	protected String name;
 	/** le port où sera attaché le service du bus à agents mobiles. Pafr défaut on prendra le port 10140 */
-	protected int port=10140;
+	protected int port=38000;
 	/** le server d'agent démarré sur ce noeud */
 	protected AgentServer agentServer;
 	/** le nom du logger */
@@ -47,7 +47,7 @@ public final class Server {
 //			loader = (BAMAgentClassLoader) new BAMServerClassLoader(new URL[]{});
 			
 			/* démarrage du server d'agents mobiles attaché à cette machine */
-			new AgentServer(name, port).start();
+			new AgentServer(name, port, loader).start();
 			/* temporisation de mise en place du server d'agents */
 			Thread.sleep(1000);
 		}catch(Exception ex){
@@ -80,7 +80,7 @@ public final class Server {
 			//On instancie ce service au sein d'un objet de type _Service
 			_Service<?> service = (_Service<?>) serviceClass.getConstructors()[0].newInstance(args);
 			//On ajoute le service a l'agentServer
-			agentServer.addService(service);
+			agentServer.addService(service,classeName);
 			
 		}catch(Exception ex){
 			logger.log(Level.FINE," erreur durant le lancement du serveur"+this,ex);
@@ -105,7 +105,7 @@ public final class Server {
 			System.out.println(" Deploying an agent ");
 			logger.log(Level.FINE," Deploying an agent ");
 			//Le deploiement d'un agent se fait sur un classLoader fils du classLOader actuel
-			BAMAgentClassLoader agentLoader = new BAMAgentClassLoader(new URL[]{new URL("file:///"+codeBase)},this.getClass().getClassLoader());
+			BAMAgentClassLoader agentLoader = new BAMAgentClassLoader(new URL[]{new URL("file:/"+System.getProperty("user.dir")+codeBase)},this.getClass().getClassLoader());
 			
 			Class<?> agentClass = Class.forName(classeName, true, agentLoader);
 			System.out.println(" Agent deployed ");
