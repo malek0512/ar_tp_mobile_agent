@@ -24,8 +24,14 @@ public class Hello extends Agent {
 	*/
 	public Hello(Object... args) {
 		super();
+		System.out.println("vant super");
 	}
 	
+//	public Hello() {
+//		super();
+//		System.out.println("vantssss super");
+//	}
+//	
 	/* (non-Javadoc)
 	 * @see jus.aor.mobilagent.kernel.Agent#retour()
 	 */

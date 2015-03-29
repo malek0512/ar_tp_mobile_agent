@@ -7,4 +7,9 @@ public class ServiceTest implements _Service<String>{
 		return "Hi, my name is lulu, i'm a service test :)";
 	}
 
+	@Override
+	public String getServiceName() {
+		return "lulu";
+	}
+
 }

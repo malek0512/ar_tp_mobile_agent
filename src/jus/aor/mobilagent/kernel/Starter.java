@@ -167,6 +167,7 @@ public class Starter{
 				serverAction.add(attrsEtape.getNamedItem("action").getNodeValue());
 				serverAddress.add(attrsEtape.getNamedItem("server").getNodeValue());
 			}
+
 			deployAgent(classeName, args, codeBase,serverAddress, serverAction);
 		}
 	}
