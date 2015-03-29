@@ -52,7 +52,8 @@ public class Agent implements _Agent{
 	public void init(BAMAgentClassLoader loader, AgentServer server, String serverName) {
 		System.out.println(" Initiating the agent on " + serverName);
 		this.loader = loader;
-		this.init(server,serverName);
+		this.agentServer = server;
+		this.serverName = serverName;
 	}
 
 	@Override

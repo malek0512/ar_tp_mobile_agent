@@ -105,19 +105,20 @@ public final class Server {
 			System.out.println(" Deploying an agent ");
 			logger.log(Level.FINE," Deploying an agent ");
 			//Le deploiement d'un agent se fait sur un classLoader fils du classLOader actuel
-			BAMAgentClassLoader agentLoader = new BAMAgentClassLoader(new URL[]{new URL("file:/"+System.getProperty("user.dir")+codeBase)},this.getClass().getClassLoader());
+			BAMAgentClassLoader agentLoader = new BAMAgentClassLoader(new URL[]{new URL("file:///"+System.getProperty("user.dir")+codeBase)},this.getClass().getClassLoader());
 			
 			Class<?> agentClass = Class.forName(classeName, true, agentLoader);
 			System.out.println(" Agent deployed ");
-//			Agent agent = (Agent) agentClass.getConstructor().newInstance(args);
-			Agent agent = (Agent) agentClass.newInstance();
-			System.out.println(" un autre syso");
+			Agent agent = (Agent) agentClass.getConstructor(Object[].class).newInstance(new Object[]{args});
+			
 			agent.init(agentLoader, agentServer, name);
 			for(int i=0; i<etapeAddress.size(); i++) {
+				System.out.println(" un autre syso");
 				agent.addEtape(new Etape(new URI(etapeAddress.get(i)), 
 						(_Action) Class.forName(etapeAction.get(i), true, agentLoader).
-						getConstructors()[0].
-						newInstance((Object[]) null)));
+						getConstructor().
+						newInstance(new Object[]{}))
+				);
 			}
 			
 //			agent.run();
