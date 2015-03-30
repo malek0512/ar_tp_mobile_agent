@@ -125,6 +125,8 @@ public class AgentServer extends Thread{
 			objInputStr.close();
 			
 			} catch (IOException | ClassNotFoundException e) {
+				System.out.println("AgentServer l128");
+				System.out.println(e);
 				e.printStackTrace();
 			}	
 		}

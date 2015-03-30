@@ -48,11 +48,15 @@ public class Starter{
 		// récupération du niveau de log
 		java.util.logging.Level level;
 		try {
-			level = Level.parse(System.getProperty("LEVEL"));	
-//			level = java.util.logging.Level.FINE;
+//			level = Level.parse(System.getProperty("LEVEL"));	
+			level = java.util.logging.Level.FINE;
 		}catch(NullPointerException e) {
+			System.out.println("Starter l54");
+			System.out.println(e);
 			level=java.util.logging.Level.OFF;
 		}catch(IllegalArgumentException e) {
+			System.out.println("Starter l58");
+			System.out.println(e);
 			level=java.util.logging.Level.SEVERE;
 		}
 		try {
@@ -73,6 +77,7 @@ public class Starter{
 			// déploiement d'agents
 			deployAgents();
 		}catch(Exception ex){
+			System.out.println("Starter l80");
 			System.out.println(ex);
 			logger.log(Level.FINE,"Ce programme nécessite un argument : <conf file> <name server>",ex);
 			return;
@@ -138,6 +143,8 @@ public class Starter{
 		try{
 			server.addService(name,classeName,codeBase,args);
 		}catch(Exception e){
+			System.out.println("Starter l146");
+			System.out.println(e);
 			logger.log(Level.FINE," erreur durant l'ajout d'un service",e);
 		}
 	}
@@ -183,6 +190,8 @@ public class Starter{
 		try{
 			server.deployAgent(classeName,args,codeBase,serverAddress,serverAction);
 		}catch(Exception e){
+			System.out.println("Starter l193");
+			System.out.println(e);
 			logger.log(Level.FINE," erreur durant le déploiement de l'agent",e);
 		}
 	}

@@ -52,6 +52,8 @@ public final class Server {
 			Thread.sleep(1000);
 		}catch(Exception ex){
 			logger.log(Level.FINE," erreur durant le lancement du serveur"+this,ex);
+			System.out.println("Server l55");
+			System.out.println(ex);
 			return;
 		}
 	}
@@ -83,6 +85,8 @@ public final class Server {
 			agentServer.addService(service,classeName);
 			
 		}catch(Exception ex){
+			System.out.println("server l88");
+			System.out.println(ex);
 			logger.log(Level.FINE," erreur durant le lancement du serveur"+this,ex);
 			return;
 		}
@@ -100,7 +104,6 @@ public final class Server {
 	 */
 	public final void deployAgent(String classeName, Object[] args, String codeBase, List<String> etapeAddress, List<String> etapeAction) {
 		try {
-			// ze zuis zen
 			//Logger
 			System.out.println(" Deploying an agent ");
 			logger.log(Level.FINE," Deploying an agent ");
@@ -110,20 +113,18 @@ public final class Server {
 			Class<?> agentClass = Class.forName(classeName, true, agentLoader);
 			System.out.println(" Agent deployed ");
 			Agent agent = (Agent) agentClass.getConstructor(Object[].class).newInstance(new Object[]{args});
-			
 			agent.init(agentLoader, agentServer, name);
 			for(int i=0; i<etapeAddress.size(); i++) {
-				System.out.println(" un autre syso");
-				agent.addEtape(new Etape(new URI(etapeAddress.get(i)), 
-						(_Action) Class.forName(etapeAction.get(i), true, agentLoader).
-						getConstructor().
-						newInstance(new Object[]{}))
-				);
+				Class<?> actClass = agentLoader.getClass(etapeAction.get(i));
+				_Action act = (_Action) actClass.getConstructor().newInstance();
+				Etape etp =  new Etape(new URI(etapeAddress.get(i)), act);
+				agent.addEtape(etp);
 			}
 			
-//			agent.run();
+			new Thread(agent).start();
 		}catch(Exception ex){
 			logger.log(Level.FINE," erreur durant le lancement du serveur"+this,ex);
+			System.out.println("Server : l127");
 			System.out.println(ex);
 			return;
 		}

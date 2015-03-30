@@ -20,12 +20,11 @@ public class Agent implements _Agent{
 	
 	@Override
 	public void run() {
-		// TODO Auto-generated method stub
 		System.out.println(" Agent running on server "+this.serverName);
 		//The agent executes his doing on this server
 		execute();
 		//The agent connects to the next server
-
+		move();
 	}
 	/**
 	 * Normally this function is called only once when the agent deployement. 
@@ -39,7 +38,7 @@ public class Agent implements _Agent{
 		 
 		if (_route == null)
 			try {
-				_route.add(new Etape(new URI(this.serverName), _Action.NIHIL));
+				_route = new Route(new Etape(new URI(this.serverName), _Action.NIHIL));
 			} catch (URISyntaxException e) {
 				e.printStackTrace();
 			}
@@ -54,6 +53,14 @@ public class Agent implements _Agent{
 		this.loader = loader;
 		this.agentServer = server;
 		this.serverName = serverName;
+		if (_route == null)
+			try {
+				_route = new Route(new Etape(new URI(this.serverName), _Action.NIHIL));
+			} catch (Exception e) {
+				System.out.println("Agent l61");
+				System.out.println(e);
+				e.printStackTrace();
+			}
 	}
 
 	@Override
@@ -93,6 +100,7 @@ public class Agent implements _Agent{
 	public void execute() {
 		if (_route.hasNext) {
 			Etape etape = _route.next(); //gets the current step and goes to the next
+			System.out.println("lulu a dit : " + serverName);
 			etape.action.execute();
 		}
 	}

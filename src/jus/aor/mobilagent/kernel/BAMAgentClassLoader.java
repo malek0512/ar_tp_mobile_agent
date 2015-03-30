@@ -53,12 +53,9 @@ public class BAMAgentClassLoader extends BAMServerClassLoader
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
-		for (Iterator it = jar.classIterator().iterator(); it.hasNext();) {
-			Entry<String, byte[]> entry = (Entry<String, byte[]>) it.next();
-			contents.put(entry.getKey(),  defineClass(entry.getValue(), 0, entry.getValue().length));
-		}
+		addJar(jar);
 	}
+	
 	
 	/**
 	 * Le contenu d'un jar est fusionn� avec les class pr� charg�s
@@ -67,7 +64,9 @@ public class BAMAgentClassLoader extends BAMServerClassLoader
 	public void addJar (Jar jar) {
 		for (Iterator it = jar.classIterator().iterator(); it.hasNext();) {
 			Entry<String, byte[]> entry = (Entry<String, byte[]>) it.next();
-			contents.put(entry.getKey(),  defineClass(entry.getValue(), 0, entry.getValue().length));
+			String className = entry.getKey();
+			className = className.substring(className.lastIndexOf('/')+1);
+			contents.put(className,  defineClass(entry.getValue(), 0, entry.getValue().length));
 		}
 	}
 	
@@ -78,7 +77,8 @@ public class BAMAgentClassLoader extends BAMServerClassLoader
 	 * @throws ClassNotFoundException 
 	 */
 	public Class<?> getClass(String classname) throws ClassNotFoundException {
-		classname.replace('.', '/').concat(".class");
+		classname = classname.replace('.', '/').concat(".class");
+		
 		if(contents.containsKey(classname))
 			return contents.get(classname);
 		//if we have a parent loader let's ask him
