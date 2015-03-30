@@ -70,28 +70,26 @@ public class Agent implements _Agent{
 
 	@Override
 	public void move() {
-		if (_route.hasNext) {
-			Etape etape = _route.get(); 
-			
-			Socket server = null;
-			try {
-				// Client connected
-				server = new Socket(etape.server.getHost(), etape.server.getPort());
-				System.out.println("Connected to " + server.getInetAddress());
-				// Get the client input stream
-				OutputStream os = server.getOutputStream();
-				//Get the associated object input stream
-				ObjectOutputStream oos = new ObjectOutputStream(os);
-				//Send the agent to the server
-				oos.writeObject(jar);
-				oos.writeObject(this);
-				oos.close();
-					
-			} catch (UnknownHostException e1) {
-				e1.printStackTrace();
-			} catch (IOException e1) {
-				e1.printStackTrace();
-			}
+		Etape etape = _route.get(); 
+		
+		Socket server = null;
+		try {
+			// Client connected
+			server = new Socket(etape.server.getHost(), etape.server.getPort());
+			System.out.println("Connected to " + server.getInetAddress());
+			// Get the client input stream
+			OutputStream os = server.getOutputStream();
+			//Get the associated object input stream
+			ObjectOutputStream oos = new ObjectOutputStream(os);
+			//Send the agent to the server
+			oos.writeObject(jar);
+			oos.writeObject(this);
+			oos.close();
+				
+		} catch (UnknownHostException e1) {
+			e1.printStackTrace();
+		} catch (IOException e1) {
+			e1.printStackTrace();
 		}
 	}
 
@@ -100,7 +98,6 @@ public class Agent implements _Agent{
 	public void execute() {
 		if (_route.hasNext) {
 			Etape etape = _route.next(); //gets the current step and goes to the next
-			System.out.println("lulu a dit : " + serverName);
 			etape.action.execute();
 		}
 	}
