@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -89,7 +90,7 @@ public class AgentServer extends Thread{
 			ObjectInputStream objInputStr = new ObjectInputStream(inStr);
 			
 			//gets the serializable jar first
-			_agentClasseLoader = new BAMAgentClassLoader(null, this._serverClasseLoader);
+			_agentClasseLoader = new BAMAgentClassLoader(new URL[]{}, this._serverClasseLoader);
 			Jar jar = (Jar) objInputStr.readObject();
 			//we load the jar in the new BAMAgent
 			_agentClasseLoader.addJar(jar);

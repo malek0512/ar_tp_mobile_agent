@@ -82,7 +82,7 @@ public class Agent implements _Agent{
 		try {
 			// Client connected
 			System.out.println("Tentatve de connection : " + etape.server.getHost() + ":" + etape.server.getPort());
-			server = new Socket(etape.server.getHost(), etape.server.getPort());
+			server = new Socket("localhost", etape.server.getPort());
 			System.out.println("Connected to " + server.getInetAddress());
 			// Get the client input stream
 			OutputStream os = server.getOutputStream();
@@ -107,6 +107,10 @@ public class Agent implements _Agent{
 			Etape etape = _route.next(); //gets the current step and goes to the next
 			etape.action.execute();
 		}
+	}
+	public void setJar(Jar jar2) {
+		// TODO Auto-generated method stub
+		this.jar = jar2;
 	}
 
 }
