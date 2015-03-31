@@ -3,7 +3,6 @@
  */
 package jus.aor.mobilagent.kernel;
 
-import java.lang.reflect.Field;
 import java.net.InetAddress;
 import java.net.URI;
 import java.net.URL;
@@ -78,6 +77,7 @@ public final class Server {
 			loader.addJar(new URL(codeBase));
 			
 			//On recupere l'objet class de la classe className du Jar
+			@SuppressWarnings("rawtypes")
 			Class serviceClass = Class.forName(classeName, true, loader);
 			//On instancie ce service au sein d'un objet de type _Service
 			_Service<?> service = (_Service<?>) serviceClass.getConstructors()[0].newInstance(args);

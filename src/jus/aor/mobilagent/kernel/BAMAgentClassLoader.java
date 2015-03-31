@@ -2,7 +2,6 @@ package jus.aor.mobilagent.kernel;
 
 import java.io.IOException;
 import java.net.URL;
-import java.net.URLClassLoader;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -61,8 +60,10 @@ public class BAMAgentClassLoader extends BAMServerClassLoader
 	 * Le contenu d'un jar est fusionn� avec les class pr� charg�s
 	 * @author MAMMAR
 	 */
+	@SuppressWarnings("deprecation")
 	public void addJar (Jar jar) {
-		for (Iterator it = jar.classIterator().iterator(); it.hasNext();) {
+		for (Iterator<?> it = jar.classIterator().iterator(); it.hasNext();) {
+			@SuppressWarnings("unchecked")
 			Entry<String, byte[]> entry = (Entry<String, byte[]>) it.next();
 			String className = entry.getKey();
 			className = className.substring(className.lastIndexOf('/')+1);

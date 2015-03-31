@@ -5,10 +5,7 @@ import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.nio.channels.SocketChannel;
 import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 
 public class AgentServer extends Thread{
@@ -18,6 +15,7 @@ public class AgentServer extends Thread{
 	//nom du server
 	protected String _server_name;
 	//liste des services qu'offre le server
+	@SuppressWarnings("rawtypes")
 	protected Map<String,_Service> _services;
 	//le AgentClassLoader associé a ce server
 	protected BAMAgentClassLoader _agentClasseLoader;
@@ -29,6 +27,7 @@ public class AgentServer extends Thread{
 	 * @argument name : nom du server
 	 * @argument port : numero du port d'écoute
 	 */
+	@SuppressWarnings("rawtypes")
 	public AgentServer(String name, int port,BAMAgentClassLoader loader)
 	{
 		_server_port = port;
@@ -60,7 +59,6 @@ public class AgentServer extends Thread{
 	 */
 	public void startAgent(_Agent agent)
 	{
-		agent.init(_agentClasseLoader, this, _server_name);
 		//we run the agent in a thread, to let the agentServer receive other agents
 		new Thread(agent).start();
 	}
@@ -81,9 +79,11 @@ public class AgentServer extends Thread{
 		
 		while(true)
 		{
+			System.out.println("AgentServer " + _server_name + " en attente d'agent.");
 			try {
 			//on accept les connections
 			Socket  socketClient = _socketServer.accept();
+			System.out.println("AgentServer " + _server_name + " a recu un agent.");
 			//on instancie les streams
 			InputStream inStr = socketClient.getInputStream();
 			ObjectInputStream objInputStr = new ObjectInputStream(inStr);
@@ -98,6 +98,7 @@ public class AgentServer extends Thread{
 			_Agent agent = (_Agent) objInputStr.readObject();
 			//on initialise l'agent
 			agent.init(_agentClasseLoader,this,_server_name);
+			System.out.println("AgentServer " + _server_name + " a deployer un agent.");
 			//enfin on demarre l'agent
 			startAgent(agent);
 			//on ferme les streams

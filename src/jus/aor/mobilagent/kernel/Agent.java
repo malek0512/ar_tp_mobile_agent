@@ -10,6 +10,10 @@ import java.net.UnknownHostException;
 
 public class Agent implements _Agent{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	//route que l'agent doit suivre
 	protected Route _route;
 	transient protected BAMAgentClassLoader loader;
@@ -77,6 +81,7 @@ public class Agent implements _Agent{
 		Socket server = null;
 		try {
 			// Client connected
+			System.out.println("Tentatve de connection : " + etape.server.getHost() + ":" + etape.server.getPort());
 			server = new Socket(etape.server.getHost(), etape.server.getPort());
 			System.out.println("Connected to " + server.getInetAddress());
 			// Get the client input stream
