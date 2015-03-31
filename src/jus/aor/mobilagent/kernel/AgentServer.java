@@ -71,28 +71,7 @@ public class AgentServer extends Thread{
 	public void run()
 	{
 		System.out.println(" Running the Agent server on " + this._server_name);
-//		for(;;) 
-//		{
-//			try 
-//			{
-//				//wait for an agent connection
-//				Socket socket = serverSocket.accept();
-//				InputStream is = socket.getInputStream();
-//				ObjectInputStream ois = new ObjectInputStream(is);
-//				//gets the serializable jar first
-//				this._agentClasseLoader = new BAMAgentClassLoader(null, this._serverClasseLoader);
-//				Jar jar = (Jar) ois.readObject();
-//				//we load the jar in the new BAMAgent
-//				this._agentClasseLoader.addJar(jar);
-//				//gets the serializable agent 
-//				Agent _agent = (Agent) ois.readObject();
-//				startAgent(_agent);
-//				
-//			} catch (IOException | ClassNotFoundException e) {
-//				e.printStackTrace();
-//			}	
-//		}
-//		
+
 		//on crée un socket
 		try {
 			_socketServer = new ServerSocket(_server_port);
@@ -110,10 +89,10 @@ public class AgentServer extends Thread{
 			ObjectInputStream objInputStr = new ObjectInputStream(inStr);
 			
 			//gets the serializable jar first
-			this._agentClasseLoader = new BAMAgentClassLoader(null, this._serverClasseLoader);
+			_agentClasseLoader = new BAMAgentClassLoader(null, this._serverClasseLoader);
 			Jar jar = (Jar) objInputStr.readObject();
 			//we load the jar in the new BAMAgent
-			this._agentClasseLoader.addJar(jar);
+			_agentClasseLoader.addJar(jar);
 			
 			//on recupere l'agent
 			_Agent agent = (_Agent) objInputStr.readObject();

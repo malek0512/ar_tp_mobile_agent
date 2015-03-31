@@ -23,6 +23,7 @@ public class Agent implements _Agent{
 		System.out.println(" Agent running on server "+this.serverName);
 		//The agent executes his doing on this server
 		execute();
+		System.out.println("action executed");
 		//The agent connects to the next server
 		move();
 	}
@@ -40,7 +41,8 @@ public class Agent implements _Agent{
 			try {
 				_route = new Route(new Etape(new URI(this.serverName), _Action.NIHIL));
 			} catch (URISyntaxException e) {
-				e.printStackTrace();
+				System.out.println("Agent l44");
+				System.out.println(e);
 			}
 	}
 
