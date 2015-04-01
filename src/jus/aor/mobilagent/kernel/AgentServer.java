@@ -5,11 +5,8 @@ import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
-<<<<<<< HEAD
 import java.net.URL;
-=======
 import java.nio.channels.SocketChannel;
->>>>>>> parent of 1b059a0... suppresion des warnings
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
