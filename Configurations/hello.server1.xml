@@ -5,6 +5,6 @@
 	<!-- <jar value="file:///.../MobilagentServer.jar"/> -->
 </server>
 
-<server>
+<!-- <server>
 	<port value="3333"/>
-</server>
+</server> -->

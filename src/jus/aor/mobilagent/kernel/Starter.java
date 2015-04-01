@@ -231,11 +231,13 @@ public class Starter{
 		if(System.getSecurityManager() == null)
 			System.setSecurityManager(new RMISecurityManager());
 		
-		new Starter("Configurations/hostel.server1.xml", "Server1");
-		//new Starter("Configurations/hostel.server2.xml", "Server2");
+//		new Starter("Configurations/hostel.server1.xml", "Server1");
+//		new Starter("Configurations/hostel.server2.xml", "Server2");
 		//new Starter("Configurations/hostel.server3.xml", "Server3");
 		
-		//new Starter("Configurations/hostel.client1.xml", "Client1");
+//		new Starter("Configurations/hostel.client1.xml", "Client1");
+		new Starter("Configurations/hello.server2.xml", "Server0");
+		new Starter("Configurations/hello.client1.xml", "Server1");
 	}
 }
 

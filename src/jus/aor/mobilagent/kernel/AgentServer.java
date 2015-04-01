@@ -21,8 +21,8 @@ public class AgentServer extends Thread{
 	//liste des services qu'offre le server
 	protected Map<String,_Service> _services;
 	//le AgentClassLoader associé a ce server
-	protected BAMAgentClassLoader _agentClasseLoader;
-	protected BAMServerClassLoader _serverClasseLoader;
+//	protected BAMAgentClassLoader _agentClasseLoader;
+	protected BAMAgentClassLoader _serverClasseLoader;
 	private ServerSocket _socketServer;
 	
 	/**
@@ -35,7 +35,7 @@ public class AgentServer extends Thread{
 		_server_port = port;
 		_server_name = name;
 		_services = new HashMap<String, _Service>();
-		_agentClasseLoader = loader;
+		_serverClasseLoader = loader;
 	}
 	
 	/**
@@ -59,7 +59,7 @@ public class AgentServer extends Thread{
 	/**
 	 * Demarre un Agent
 	 */
-	public void startAgent(_Agent agent)
+	public void startAgent(_Agent agent, BAMAgentClassLoader _agentClasseLoader)
 	{
 		agent.init(_agentClasseLoader, this, _server_name);
 		//we run the agent in a thread, to let the agentServer receive other agents
@@ -92,19 +92,20 @@ public class AgentServer extends Thread{
 			//gets the serializable jar first
 			
 			// thx mysterious guy
-			_agentClasseLoader = new BAMAgentClassLoader(new URL[]{}, this.getClass().getClassLoader());
-			
+			BAMAgentClassLoader _agentClasseLoader = new BAMAgentClassLoader(new URL[]{}, this.getClass().getClassLoader());
+			ut
 			//_agentClasseLoader = new BAMAgentClassLoader(new URL[]{}, this._serverClasseLoader);
 			Jar jar = (Jar) objInputStr.readObject();
 			//we load the jar in the new BAMAgent
-			_agentClasseLoader.addJar(new Jar(System.getProperty("user.dir")+"/Hello.jar"));
+//			_agentClasseLoader.addJar(new Jar(System.getProperty("user.dir")+"/Hello.jar"));
+			_agentClasseLoader.addJar(jar);
 			
 			//on recupere l'agent
 			_Agent agent = (_Agent) objInputStr.readObject();
 			//on initialise l'agent
 			agent.init(_agentClasseLoader,this,_server_name);
 			//enfin on demarre l'agent
-			startAgent(agent);
+			startAgent(agent, _agentClasseLoader);
 			//on ferme les streams
 			objInputStr.close();
 			
