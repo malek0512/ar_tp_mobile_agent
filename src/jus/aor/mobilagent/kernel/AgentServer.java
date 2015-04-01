@@ -94,8 +94,8 @@ public class AgentServer extends Thread{
 			//_agentClasseLoader = new BAMAgentClassLoader(new URL[]{}, this._serverClasseLoader);
 			Jar jar = (Jar) objInputStr.readObject();
 			
-			if(Starter.DEBUG)
-				System.out.println("Received jar : " + jar);
+//			if(Starter.DEBUG)
+//				System.out.println("Received jar : " + jar);
 			
 			//we load the jar in the new BAMAgent
 			System.out.println("Adding the jar to the server class loader");

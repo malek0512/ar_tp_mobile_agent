@@ -66,8 +66,8 @@ public class BAMAgentClassLoader extends BAMServerClassLoader
 	 */
 	@SuppressWarnings("deprecation")
 	public void addJar (Jar jar) {
-		if (DEBUG)
-			System.out.println("Adding Jar : " + jar.toString());
+//		if (DEBUG)
+//			System.out.println("Adding Jar : " + jar.toString());
 		for (Iterator<?> it = jar.classIterator().iterator(); it.hasNext();) {
 			@SuppressWarnings("unchecked")
 			Entry<String, byte[]> entry = (Entry<String, byte[]>) it.next();

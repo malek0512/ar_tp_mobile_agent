@@ -1,8 +1,8 @@
 package jus.aor.mobilagent.lookforhotel;
 
 import java.io.File;
+import java.util.Map;
 import java.util.HashMap;
-import java.util.Iterator;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -17,8 +17,7 @@ import org.w3c.dom.NodeList;
 
 public class Annuaire implements _Annuaire, _Service<Numero>{
 
-	HashMap<String,Numero> annuaire;
-	
+	Map<String,Numero> annuaire;
 	
 /**
  * @author alex
@@ -58,18 +57,30 @@ public Annuaire(Object... args)
  */
 @Override
 public Numero get(String abonne) {
-	Iterator<Numero> iterator = annuaire.values().iterator();
-	Numero res = null;
-	//On parcourt avec l'itérateur pour associer les numéros de téléphone
-	while (iterator.hasNext())
-	{
-		res = iterator.next();
-		if(res.toString().compareTo(abonne)==0)
-		{
-			return res;
-		}
+	
+//	Iterator iterator = annuaire.entrySet().iterator();
+	
+//	Numero res = null;
+//	//On parcourt avec l'itérateur pour associer les numéros de téléphone
+//	while (iterator.hasNext())
+//	{
+//		res = iterator.
+//		if(res.toString().compareTo(abonne)==0)
+//		{
+//			return res;
+//		}
+//	}
+//	return res;
+	System.out.println("ANNUAIRE "+abonne);
+	if (annuaire.containsKey(abonne)) {
+		System.out.println("numero"+annuaire.get(abonne));
+		return annuaire.get(abonne);
 	}
-	return res;
+	else{
+		System.out.println("No numero found for abonne : "+abonne);
+		return null;
+	}
+		
 }
 
 /**

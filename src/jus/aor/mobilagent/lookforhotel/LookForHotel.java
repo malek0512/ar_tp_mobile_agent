@@ -1,5 +1,6 @@
 package jus.aor.mobilagent.lookforhotel;
 
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -24,9 +25,9 @@ public class LookForHotel extends Agent{
 	private String localisation;
 	
 	/** les hotels recuperer petit a petit */
-	private LinkedList<Hotel> hotels;
+	private List<Hotel> hotels;
 	/** les numeros recuperer dans le server annuaire */
-	private LinkedList<Numero> numeros;
+	private List<Numero> numeros;
 	
 	/**
 	 * Définition de l'objet représentant l'interrogation.
@@ -55,8 +56,9 @@ public class LookForHotel extends Agent{
 		public void execute() {
 			if (jus.aor.mobilagent.kernel.Starter.DEBUG)
 				System.out.println("Agents asking service : Hotels");
-			_Service<List<Hotel>> service = (_Service<List<Hotel>>) agentServer.getService("Hotels");
-			hotels.addAll(service.call(new Object[]{localisation}));
+			_Service<List<String>> service = (_Service<List<String>>) agentServer.getService("Hotels");
+			System.out.println(((List<String>) service.call(localisation)).get(0));
+//			System.out.println(hotels);
 		}
 	};
 	
@@ -65,9 +67,9 @@ public class LookForHotel extends Agent{
 		public void execute() {
 			System.out.println("Agents asking service : Telephones");
 			_Service<Numero> service = (_Service<Numero>) agentServer.getService("Telephones");
-			for(Hotel it : hotels)
+			for(Hotel hotel : hotels)
 			{
-				numeros.add(service.call(it.name));
+				numeros.add(service.call(hotel.name));
 			}
 			System.out.println("Here is the resultat of the search ");
 			for(int i=0; i<hotels.size(); i++) {
@@ -82,6 +84,7 @@ public class LookForHotel extends Agent{
 			@Override
 			public void execute() {
 				System.out.println("Action retour de l'agent LookForHotel");
+				System.out.println(hotels);
 			}
 		};
 	};

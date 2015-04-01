@@ -3,6 +3,10 @@
  */
 package jus.aor.mobilagent.kernel;
 
+import java.util.List;
+
+import jus.aor.mobilagent.lookforhotel.Numero;
+
 /**
  * Définition d'un service pouvant intégrer un serveur.
  * Le constructeur d'un service devra avoir la signature suivante :
