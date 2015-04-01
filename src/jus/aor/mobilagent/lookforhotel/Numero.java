@@ -8,7 +8,7 @@ package jus.aor.mobilagent.lookforhotel;
  * Un numéro de téléphone
  * @author Morat 
  */
-public class Numero {
+public class Numero implements java.io.Serializable {
 	/** le numéro de téléphone */
 	public String numero;
 	/**

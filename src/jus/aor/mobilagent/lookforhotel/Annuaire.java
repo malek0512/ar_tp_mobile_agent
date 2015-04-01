@@ -15,7 +15,7 @@ import org.w3c.dom.NodeList;
 
 
 
-public class Annuaire implements _Annuaire, _Service<Numero>{
+public class Annuaire implements _Service<Numero>{
 
 	Map<String,Numero> annuaire;
 	
@@ -55,25 +55,8 @@ public Annuaire(Object... args)
 /**
  * @author alex
  */
-@Override
 public Numero get(String abonne) {
-	
-//	Iterator iterator = annuaire.entrySet().iterator();
-	
-//	Numero res = null;
-//	//On parcourt avec l'itérateur pour associer les numéros de téléphone
-//	while (iterator.hasNext())
-//	{
-//		res = iterator.
-//		if(res.toString().compareTo(abonne)==0)
-//		{
-//			return res;
-//		}
-//	}
-//	return res;
-	System.out.println("ANNUAIRE "+abonne);
 	if (annuaire.containsKey(abonne)) {
-		System.out.println("numero"+annuaire.get(abonne));
 		return annuaire.get(abonne);
 	}
 	else{

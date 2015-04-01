@@ -97,10 +97,12 @@ public class Agent implements _Agent{
 		Socket server = null;
 		try {
 			// Client connected
-			System.out.println("Tentative de connection : " + serverDest.getHost() + ":" + serverDest.getPort());
+			System.out.println("Connecting to " + serverDest.getHost() + ":" + serverDest.getPort()+"...");
+			agentServer.log("Connecting to " + serverDest.getHost() + ":" + serverDest.getPort()+"...");
 			server = new Socket("localhost", serverDest.getPort());
 //			server = new Socket(etape.server.getHost(), etape.server.getPort());
 			System.out.println("Connected to " + server.getInetAddress());
+			agentServer.log("Connected to " + server.getInetAddress());
 			// Get the client input stream
 			OutputStream os = server.getOutputStream();
 			//Get the associated object input stream

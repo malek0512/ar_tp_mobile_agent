@@ -1,6 +1,5 @@
 package jus.aor.mobilagent.lookforhotel;
 
-
 import java.io.File;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -15,11 +14,10 @@ import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.NodeList;
 
-public class Chaine implements _Chaine, _Service<LinkedList<Hotel>>{
+public class Chaine implements _Service<List<Hotel>>{
 
 	//Declaration des attributs nécessaires
-	public LinkedList<Hotel> listHotel;
-	public List<String> listHotelName = new LinkedList<String>();
+	public List<Hotel> listHotel;
 	
 	/**
 	 * @param args : 0 -> file du ficher xml décrivant la liste d'hotel
@@ -60,9 +58,9 @@ public class Chaine implements _Chaine, _Service<LinkedList<Hotel>>{
 		return "Hotels";
 	}
 
-	@Override
-	public List<String> get(String localisation) {
+	private List<Hotel> get(String localisation) {
 		//Creation d'un iterateur pour notre hashmap
+		
 		Iterator<Hotel> it = listHotel.iterator();
 		
 		//Creation de la liste que l'on va renvoyer
@@ -71,22 +69,19 @@ public class Chaine implements _Chaine, _Service<LinkedList<Hotel>>{
 		while (it.hasNext())
 		{
 			Hotel h = it.next();
-			if(h.localisation == localisation){
+			if(h.localisation.compareTo(localisation)==0){
 				res.add(h);
-				listHotelName.add(h.name);
-				System.out.println("CHAINE : "+h);
 			}
-				
 		}
 		
-		return listHotelName;
+		return res;
 	}
 
 	@Override
 	 /**
 	  * @params : 0 -> String : localisation
 	  */
-	public List<String> call(Object... params)
+	public List<Hotel> call(Object... params)
 			throws IllegalArgumentException {
 		return get((String)params[0]);
 	}

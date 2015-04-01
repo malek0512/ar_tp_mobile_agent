@@ -3,6 +3,7 @@ package jus.aor.mobilagent.lookforhotel;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.logging.Level;
 
 import jus.aor.mobilagent.kernel.Agent;
 import jus.aor.mobilagent.kernel._Action;
@@ -36,7 +37,6 @@ public class LookForHotel extends Agent{
 	 */
 	public LookForHotel(Object... args){
 		super();
-		System.out.println("lulu");
 		localisation = (String) args[0];
 		hotels = new LinkedList<Hotel>();
 		numeros = new LinkedList<Numero>();
@@ -54,11 +54,10 @@ public class LookForHotel extends Agent{
 	public _Action findHotel = new _Action() {
 		private static final long serialVersionUID = 1L;
 		public void execute() {
-			if (jus.aor.mobilagent.kernel.Starter.DEBUG)
-				System.out.println("Agents asking service : Hotels");
-			_Service<List<String>> service = (_Service<List<String>>) agentServer.getService("Hotels");
-			System.out.println(((List<String>) service.call(localisation)).get(0));
-//			System.out.println(hotels);
+			System.out.println("Agents asking service : Hotels");
+			agentServer.log("Agents asking service : Hotels");
+			_Service<List<Hotel>> service = (_Service<List<Hotel>>) agentServer.getService("Hotels");
+			hotels.addAll((List<Hotel>) service.call(localisation));
 		}
 	};
 	
@@ -71,10 +70,7 @@ public class LookForHotel extends Agent{
 			{
 				numeros.add(service.call(hotel.name));
 			}
-			System.out.println("Here is the resultat of the search ");
-			for(int i=0; i<hotels.size(); i++) {
-				System.out.println("Hotel : "+hotels.get(i)+", "+"Number : "+numeros.get(i));
-			}
+
 		}
 	};
 	
@@ -84,7 +80,13 @@ public class LookForHotel extends Agent{
 			@Override
 			public void execute() {
 				System.out.println("Action retour de l'agent LookForHotel");
-				System.out.println(hotels);
+				System.out.println("Here is the resultat of the search ");
+				agentServer.log("Here is the resultat of the search ");
+				for(int i=0; i<hotels.size(); i++) {
+//					System.out.println("Hotel : "+hotels.get(i)+", "+"Number : "+numeros.get(i));
+					agentServer.log("Hotel : "+hotels.get(i)+", "+"Number : "+numeros.get(i));
+				}
+				System.out.println("Finished");
 			}
 		};
 	};

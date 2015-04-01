@@ -44,13 +44,13 @@ public final class Server {
 			/* mise en place du logger pour tracer l'application */
 			loggerName = "jus/aor/mobilagent/"+InetAddress.getLocalHost().getHostName()+"/"+this.name;
 			logger=Logger.getLogger(loggerName);
-			
+			logger.log(Level.FINE,"SERVER "+name);
 //			//On instancie un loader pour ce serveur
 //			loader = (BAMAgentClassLoader) new BAMServerClassLoader(new URL[]{});
 			loaderServer = new BAMAgentClassLoader(new URL[]{}, this.getClass().getClassLoader());
 			
 			/* démarrage du server d'agents mobiles attaché à cette machine */
-			agentServer = new AgentServer(name, port, loaderServer);
+			agentServer = new AgentServer(name, port, loaderServer,this);
 			agentServer.start();
 			
 			/* temporisation de mise en place du server d'agents */
@@ -62,6 +62,8 @@ public final class Server {
 			return;
 		}
 	}
+	
+	
 	/**
 	 * Ajoute le service caractérisé par les arguments
 	 * Crée une classe de type _Service et de nom ClasseName.
@@ -76,7 +78,7 @@ public final class Server {
 	public final void addService(String name, String classeName, String codeBase, Object... args) {
 		try {
 			//Logger
-			System.out.println(" Adding a service : " + name);
+			System.out.println(" Adding a service : " + name +" "+ classeName);
 			logger.log(Level.FINE," Adding a service ");
 
 			//On charge le code du service dans le BAMServerClassLoader
@@ -86,6 +88,7 @@ public final class Server {
 			
 			//On recupere l'objet class de la classe className du Jar
 			Class<?> serviceClass = Class.forName(classeName, true, loaderServer);
+//			Class<?> serviceClass = loaderServer.findClass(classeName);
 			
 			//On instancie ce service au sein d'un objet de type _Service
 			_Service<?> service = (_Service<?>) serviceClass.getConstructor(Object[].class).newInstance(new Object[]{args});
@@ -122,6 +125,8 @@ public final class Server {
 			agentLoader.addJar(new URL(jarPath));
 			//Chargement de l'objet classe
 			Class<?> agentClass = Class.forName(classeName, true, agentLoader);
+//			Class<?> agentClass = agentLoader.findClass(classeName);
+			
 			//Instanciation  de l'agent
 			Agent agent = (Agent) agentClass.getConstructor(Object[].class).newInstance(new Object[]{args});
 			agent.setJar(new URL(jarPath)); //Mis a jour de la caisse a outils de l'agent
@@ -135,7 +140,7 @@ public final class Server {
 				field.setAccessible(true);
 				_Action act = (_Action) field.get(agent);
 				
-				//Class<?> actClass = agentLoader.getClass(etapeAction.get(i));
+//				Class<?> actClass = agentLoader.getClass(etapeAction.get(i));
 				//_Action act = (_Action) actClass.getConstructor().newInstance();
 				URI server = new URI(etapeAddress.get(i));
 				Etape etp =  new Etape(server, act);

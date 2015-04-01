@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
 
 public class AgentServer extends Thread{
 
@@ -19,23 +20,24 @@ public class AgentServer extends Thread{
 	//nom du server
 	protected String _server_name;
 	//liste des services qu'offre le server
-	protected Map<String,_Service> _services;
+	protected Map<String,_Service<?>> _services;
 	//le AgentClassLoader associé a ce server
 //	protected BAMAgentClassLoader _agentClasseLoader;
 	protected BAMAgentClassLoader _serverClasseLoader;
 	private ServerSocket _socketServer;
-	
+	private Server server;
 	/**
 	 * Initialise le server
 	 * @argument name : nom du server
 	 * @argument port : numero du port d'écoute
 	 */
-	public AgentServer(String name, int port, BAMAgentClassLoader loader)
+	public AgentServer(String name, int port, BAMAgentClassLoader loader, Server server)
 	{
 		_server_port = port;
 		_server_name = name;
-		_services = new HashMap<String, _Service>();
+		_services = new HashMap<String, _Service<?>>();
 		_serverClasseLoader = loader;
+		this.server = server;
 	}
 	
 	/**
@@ -64,6 +66,10 @@ public class AgentServer extends Thread{
 		agent.init(_agentClasseLoader, this, _server_name);
 		//we run the agent in a thread, to let the agentServer receive other agents
 		new Thread(agent).start();
+	}
+	
+	public void log(String debug) {
+		server.logger.log(Level.FINE,debug);
 	}
 	
 	/**
