@@ -87,8 +87,8 @@ public final class Server {
 			loaderServer.addJar(new URL(jarPath));
 			
 			//On recupere l'objet class de la classe className du Jar
-			Class<?> serviceClass = Class.forName(classeName, true, loaderServer);
-//			Class<?> serviceClass = loaderServer.findClass(classeName);
+//			Class<?> serviceClass = Class.forName(classeName, true, loaderServer);
+			Class<?> serviceClass = loaderServer.findClass(classeName);
 			
 			//On instancie ce service au sein d'un objet de type _Service
 			_Service<?> service = (_Service<?>) serviceClass.getConstructor(Object[].class).newInstance(new Object[]{args});
@@ -124,8 +124,8 @@ public final class Server {
 			BAMAgentClassLoader agentLoader = new BAMAgentClassLoader(new URL[]{}, loaderServer);
 			agentLoader.addJar(new URL(jarPath));
 			//Chargement de l'objet classe
-			Class<?> agentClass = Class.forName(classeName, true, agentLoader);
-//			Class<?> agentClass = agentLoader.findClass(classeName);
+//			Class<?> agentClass = Class.forName(classeName, true, agentLoader);
+			Class<?> agentClass = agentLoader.findClass(classeName);
 			
 			//Instanciation  de l'agent
 			Agent agent = (Agent) agentClass.getConstructor(Object[].class).newInstance(new Object[]{args});

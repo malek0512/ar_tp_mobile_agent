@@ -12,11 +12,5 @@
 		<etape server="mobilagent://server2:3333/" action="findHotel" />
 		<etape server="mobilagent://server3:4444/" action="findTelephone" />
 	</agent>
-<!--
-	<agent class="jus.aor.mobilagent.hello.Hello" codebase=".../Hello.jar" args="">
-		<etape server="mobilagent://...:222/" action="doIt" />
-		<etape server="mobilagent://...:333/" action="doIt" />
-	</agent>
--->
 </server>
 

@@ -72,7 +72,7 @@ public class BAMAgentClassLoader extends BAMServerClassLoader
 			@SuppressWarnings("unchecked")
 			Entry<String, byte[]> entry = (Entry<String, byte[]>) it.next();
 			String className = entry.getKey();
-			className = className.substring(className.lastIndexOf('/')+1);
+			className = className.replace('/', '.');
 			byte[] b = entry.getValue();
 			Class<?> c= null;
 			c = defineClass(b, 0, entry.getValue().length);
@@ -88,8 +88,8 @@ public class BAMAgentClassLoader extends BAMServerClassLoader
 	 */
 	@Override
 	public Class<?> findClass(String classname) throws ClassNotFoundException {
-		
-		String classnameTmp = classname.replace('.', '/').concat(".class");
+		System.out.println(this.toString());
+		String classnameTmp = classname.concat(".class");
 		if (DEBUG )
 			System.out.println("Looking for class : "+classname+" --> "+classnameTmp);
 		
@@ -99,7 +99,7 @@ public class BAMAgentClassLoader extends BAMServerClassLoader
 		else if (parent != null)
 			return parent.loadClass(classnameTmp);
 		
-		throw new ClassNotFoundException("No class of that name found : "+classnameTmp);
+		throw new ClassNotFoundException("No class of that name found : "+classname);
 	}
 	
 	@Override

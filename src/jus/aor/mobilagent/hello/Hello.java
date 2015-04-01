@@ -18,14 +18,15 @@ public class Hello extends Agent {
 		public void execute() {
 //			super().execute();
 			System.out.println("Hello action !");
+			agentServer.log("Hello action !");
 		}
 	};
 	
 	private _Action doIt2 = new _Action() {
 		private static final long serialVersionUID = 1L;
 		public void execute() {
-//			super().execute();
-			System.out.println("Travail terminÃ©");
+			System.out.println("Travail terminé");
+			agentServer.log("Travail terminé");
 		}
 	};
 	
