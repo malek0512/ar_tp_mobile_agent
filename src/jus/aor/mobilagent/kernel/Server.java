@@ -3,6 +3,7 @@
  */
 package jus.aor.mobilagent.kernel;
 
+import java.lang.reflect.Field;
 import java.net.InetAddress;
 import java.net.URI;
 import java.net.URL;
@@ -27,6 +28,8 @@ public final class Server {
 	protected Logger logger=null;
 	/** Le classLoader pour les agents */
 	protected BAMAgentClassLoader loader;
+	/** Le classLoader du server*/
+	protected BAMServerClassLoader loaderServer;
 	
 	/**
 	 * Démarre un serveur de type mobilagent 
@@ -44,6 +47,8 @@ public final class Server {
 			//TODO vérifier si c'est tout ce qui y a à faire
 //			//On instancie un loader pour ce serveur
 //			loader = (BAMAgentClassLoader) new BAMServerClassLoader(new URL[]{});
+			loaderServer = new BAMServerClassLoader(new URL[]{});
+			
 			
 			/* démarrage du server d'agents mobiles attaché à cette machine */
 			new AgentServer(name, port, loader).start();
@@ -74,13 +79,15 @@ public final class Server {
 			System.out.println(" Adding a service ");
 			logger.log(Level.FINE," Adding a service ");
 			//On charge le code du service dans le BAMServerClassLoader
-			loader.addJar(new URL(codeBase));
+			//String jarPath = "file:///"+System.getProperty("user.dir")+codeBase;
+			//loader.addJar(new URL(jarPath));
+			//loaderServer.addURL(new URL(jarPath));
 			
 			//On recupere l'objet class de la classe className du Jar
 			@SuppressWarnings("rawtypes")
 			Class serviceClass = Class.forName(classeName, true, loader);
 			//On instancie ce service au sein d'un objet de type _Service
-			_Service<?> service = (_Service<?>) serviceClass.getConstructors()[0].newInstance(args);
+			_Service<?> service = (_Service<?>) serviceClass.getConstructor(Object[].class).newInstance(new Object[]{args});
 			//On ajoute le service a l'agentServer
 			agentServer.addService(service,classeName);
 			
@@ -109,16 +116,22 @@ public final class Server {
 			logger.log(Level.FINE," Deploying an agent ");
 			String jarPath = "file:///"+System.getProperty("user.dir")+codeBase;
 			//Le deploiement d'un agent se fait sur un classLoader fils du classLOader actuel
-			BAMAgentClassLoader agentLoader = new BAMAgentClassLoader(new URL[]{new URL(jarPath)},this.getClass().getClassLoader());
+			BAMAgentClassLoader agentLoader = new BAMAgentClassLoader(new URL[]{},this.getClass().getClassLoader());
+			agentLoader.addJar(new URL(jarPath));
 			Class<?> agentClass = Class.forName(classeName, true, agentLoader);
 			System.out.println(" Agent deployed ");
 			Agent agent = (Agent) agentClass.getConstructor(Object[].class).newInstance(new Object[]{args});
 			agent.setJar(new Jar(System.getProperty("user.dir")+codeBase));
-			agent.init(agentLoader, agentServer, name);
+			agent.init(agentServer, "mobilagent://" + name + ":" + port +"/");
 			for(int i=0; i<etapeAddress.size(); i++) {
-				Class<?> actClass = agentLoader.getClass(etapeAction.get(i));
-				_Action act = (_Action) actClass.getConstructor().newInstance();
-				Etape etp =  new Etape(new URI(etapeAddress.get(i)), act);
+				Field field = agentClass.getDeclaredField(etapeAction.get(i));
+				field.setAccessible(true);
+				_Action act = (_Action) field.get(agent);
+				
+				//Class<?> actClass = agentLoader.getClass(etapeAction.get(i));
+				//_Action act = (_Action) actClass.getConstructor().newInstance();
+				URI server = new URI(etapeAddress.get(i));
+				Etape etp =  new Etape(server, act);
 				agent.addEtape(etp);
 			}
 			

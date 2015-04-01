@@ -1,5 +1,6 @@
 package jus.aor.mobilagent.kernel;
 
+import java.net.URI;
 import java.net.UnknownHostException;
 
 /**
@@ -34,10 +35,11 @@ public interface _Agent extends java.io.Serializable, Runnable {
 	/**
 	 * Action a executer sur le server 
 	 */
-	public void execute();
+	public void execute(_Action act);
 	
 	/**
 	 * deplace l'agent vers le server suivant sur ca feuille de route
 	 */
-	public void move();
+	public void move(URI server);
+
 }

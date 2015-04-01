@@ -15,7 +15,7 @@ import org.w3c.dom.NodeList;
 
 
 
-public class Annuaire implements _Annuaire, _Service<HashMap<String,Hotel>>{
+public class Annuaire implements _Annuaire, _Service<Numero>{
 
 	HashMap<String,Numero> annuaire;
 	
@@ -71,10 +71,13 @@ public Numero get(String abonne) {
 	return res;
 }
 
+/**
+ * @param : 0 -> String : nom de l'hotel
+ */
 @Override
-public HashMap<String, Hotel> call(Object... params)
+public Numero call(Object... params)
 		throws IllegalArgumentException {
-	return null;
+	return get((String) params[0]);
 }
 
 @Override

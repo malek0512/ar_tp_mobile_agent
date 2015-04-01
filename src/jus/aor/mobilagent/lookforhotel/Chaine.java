@@ -1,9 +1,7 @@
 package jus.aor.mobilagent.lookforhotel;
 
 
-import java.awt.List;
 import java.io.File;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 
@@ -16,7 +14,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.NodeList;
 
-public class Chaine implements _Chaine, _Service<HashMap<String,Hotel>>{
+public class Chaine implements _Chaine, _Service<LinkedList<Hotel>>{
 
 	//Declaration des attributs nécessaires
 	public LinkedList<Hotel> listHotel;
@@ -56,7 +54,7 @@ public class Chaine implements _Chaine, _Service<HashMap<String,Hotel>>{
 	}
 
 	@Override
-	public java.util.List<Hotel> get(String localisation) {
+	public java.util.LinkedList<Hotel> get(String localisation) {
 		//Creation d'un iterateur pour notre hashmap
 		Iterator<Hotel> it = listHotel.iterator();
 		
@@ -74,9 +72,12 @@ public class Chaine implements _Chaine, _Service<HashMap<String,Hotel>>{
 	}
 
 	@Override
-	public HashMap<String, Hotel> call(Object... params)
+	 /**
+	  * @params : 0 -> String : localisation
+	  */
+	public LinkedList<Hotel> call(Object... params)
 			throws IllegalArgumentException {
-		return null;
+		return (LinkedList<Hotel>) get((String)params[0]);
 	}
 
 }

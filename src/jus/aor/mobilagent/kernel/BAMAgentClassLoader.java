@@ -51,7 +51,8 @@ public class BAMAgentClassLoader extends BAMServerClassLoader
 		try {
 			jar = new Jar(url.getPath());
 		} catch (IOException e) {
-			e.printStackTrace();
+			System.out.println("bam agent class loader l54");
+			System.out.println(e);
 		}
 		addJar(jar);
 	}
@@ -61,12 +62,17 @@ public class BAMAgentClassLoader extends BAMServerClassLoader
 	 * Le contenu d'un jar est fusionn� avec les class pr� charg�s
 	 * @author MAMMAR
 	 */
+	@SuppressWarnings("deprecation")
 	public void addJar (Jar jar) {
-		for (Iterator it = jar.classIterator().iterator(); it.hasNext();) {
+		for (Iterator<?> it = jar.classIterator().iterator(); it.hasNext();) {
+			@SuppressWarnings("unchecked")
 			Entry<String, byte[]> entry = (Entry<String, byte[]>) it.next();
 			String className = entry.getKey();
 			className = className.substring(className.lastIndexOf('/')+1);
-			contents.put(className,  defineClass(entry.getValue(), 0, entry.getValue().length));
+			byte[] b = entry.getValue();
+			Class<?> c= null;
+			c = defineClass(b, 0, entry.getValue().length);
+			contents.put(className,  c);
 		}
 	}
 	

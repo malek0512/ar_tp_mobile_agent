@@ -21,6 +21,15 @@ public class Hello extends Agent {
 		}
 	};
 	
+	private _Action doIt2 = new _Action() {
+		private static final long serialVersionUID = 1L;
+		public void execute() {
+//			super().execute();
+			System.out.println("Travail terminé");
+		}
+	};
+	
+	
 	/**
 	* construction d'un agent de type hello.
 	* @param args aucun argument n'est requis
@@ -33,7 +42,7 @@ public class Hello extends Agent {
 	 * @see jus.aor.mobilagent.kernel.Agent#retour()
 	 */
 	protected _Action retour() {
-		return this.doIt;
+		return this.doIt2;
 	}
 	
 }

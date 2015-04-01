@@ -30,7 +30,7 @@ public class AgentServer extends Thread{
 	 * @argument name : nom du server
 	 * @argument port : numero du port d'écoute
 	 */
-	public AgentServer(String name, int port,BAMAgentClassLoader loader)
+	public AgentServer(String name, int port, BAMAgentClassLoader loader)
 	{
 		_server_port = port;
 		_server_name = name;
@@ -90,10 +90,14 @@ public class AgentServer extends Thread{
 			ObjectInputStream objInputStr = new ObjectInputStream(inStr);
 			
 			//gets the serializable jar first
-			_agentClasseLoader = new BAMAgentClassLoader(new URL[]{}, this._serverClasseLoader);
+			
+			// thx mysterious guy
+			_agentClasseLoader = new BAMAgentClassLoader(new URL[]{}, this.getClass().getClassLoader());
+			
+			//_agentClasseLoader = new BAMAgentClassLoader(new URL[]{}, this._serverClasseLoader);
 			Jar jar = (Jar) objInputStr.readObject();
 			//we load the jar in the new BAMAgent
-			_agentClasseLoader.addJar(jar);
+			_agentClasseLoader.addJar(new Jar(System.getProperty("user.dir")+"/Hello.jar"));
 			
 			//on recupere l'agent
 			_Agent agent = (_Agent) objInputStr.readObject();

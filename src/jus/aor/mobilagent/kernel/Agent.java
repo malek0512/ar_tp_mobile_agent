@@ -16,16 +16,31 @@ public class Agent implements _Agent{
 	transient protected Jar jar;
 	transient protected AgentServer agentServer;
 	private String serverName;
-	
+	private boolean finish;
 	
 	@Override
 	public void run() {
 		System.out.println(" Agent running on server "+this.serverName);
 		//The agent executes his doing on this server
-		execute();
-		System.out.println("action executed");
-		//The agent connects to the next server
-		move();
+		Etape etape = _route.next();
+		//effectue l'action
+		if(finish==true)
+			execute(this.retour());
+		else
+		{
+			execute(etape.action);
+			if(_route.hasNext)
+			{
+				//The agent connects to the next server
+				etape = _route.get();
+				move(etape.server);
+			}
+			else if(finish == false)
+			{
+				finish = true;
+				move(_route.next().server);
+			}
+		}
 	}
 	/**
 	 * Normally this function is called only once when the agent deployement. 
@@ -37,13 +52,17 @@ public class Agent implements _Agent{
 		this.agentServer = agentServer;
 		this.serverName = serverName;
 		 
-		if (_route == null)
+		if (_route == null) {
 			try {
-				_route = new Route(new Etape(new URI(this.serverName), _Action.NIHIL));
-			} catch (URISyntaxException e) {
-				System.out.println("Agent l44");
+				URI uri = new URI(this.serverName);
+				_route = new Route(new Etape(uri, this.retour()));
+				_route.add(new Etape(new URI(this.serverName), _Action.NIHIL));
+			} catch (Exception e) {
+				System.out.println("Agent l61");
 				System.out.println(e);
+				e.printStackTrace();
 			}
+		}
 	}
 
 	/**
@@ -57,7 +76,9 @@ public class Agent implements _Agent{
 		this.serverName = serverName;
 		if (_route == null)
 			try {
-				_route = new Route(new Etape(new URI(this.serverName), _Action.NIHIL));
+				URI uri = new URI(this.serverName);
+				_route = new Route(new Etape(uri, this.retour()));
+				_route.add(new Etape(new URI(this.serverName), _Action.NIHIL));
 			} catch (Exception e) {
 				System.out.println("Agent l61");
 				System.out.println(e);
@@ -71,14 +92,12 @@ public class Agent implements _Agent{
 	}
 
 	@Override
-	public void move() {
-		Etape etape = _route.get(); 
-		
+	public void move(URI serverDest) {
 		Socket server = null;
 		try {
 			// Client connected
-			System.out.println("Tentatve de connection : " + etape.server.getHost() + ":" + etape.server.getPort());
-			server = new Socket("localhost", etape.server.getPort());
+			System.out.println("Tentatve de connection : " + serverDest.getHost() + ":" + serverDest.getPort());
+			server = new Socket("localhost", serverDest.getPort());
 //			server = new Socket(etape.server.getHost(), etape.server.getPort());
 			System.out.println("Connected to " + server.getInetAddress());
 			// Get the client input stream
@@ -96,18 +115,23 @@ public class Agent implements _Agent{
 			e1.printStackTrace();
 		}
 	}
-
+	
 	//Not used
 	@Override
-	public void execute() {
-		if (_route.hasNext) {
-			Etape etape = _route.next(); //gets the current step and goes to the next
-			etape.action.execute();
-		}
+	public void execute(_Action action) {
+		 //gets the current step and goes to the next
+		action.execute();
 	}
 	public void setJar(Jar jar2) {
 		// TODO Auto-generated method stub
 		this.jar = jar2;
 	}
 
+	/**
+	 * Action a effectuer sur le server de retour
+	 */
+	protected _Action retour()
+	{
+		return _Action.NIHIL;
+	}
 }
