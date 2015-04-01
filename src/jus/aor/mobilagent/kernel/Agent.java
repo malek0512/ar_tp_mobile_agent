@@ -5,6 +5,7 @@ import java.io.OutputStream;
 import java.net.Socket;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.net.UnknownHostException;
 
 
@@ -96,7 +97,7 @@ public class Agent implements _Agent{
 		Socket server = null;
 		try {
 			// Client connected
-			System.out.println("Tentatve de connection : " + serverDest.getHost() + ":" + serverDest.getPort());
+			System.out.println("Tentative de connection : " + serverDest.getHost() + ":" + serverDest.getPort());
 			server = new Socket("localhost", serverDest.getPort());
 //			server = new Socket(etape.server.getHost(), etape.server.getPort());
 			System.out.println("Connected to " + server.getInetAddress());
@@ -105,6 +106,7 @@ public class Agent implements _Agent{
 			//Get the associated object input stream
 			ObjectOutputStream oos = new ObjectOutputStream(os);
 			//Send the agent to the server
+			System.out.println("Sending the jar file ");
 			oos.writeObject(jar);
 			oos.writeObject(this);
 			oos.close();
@@ -127,6 +129,17 @@ public class Agent implements _Agent{
 		this.jar = jar2;
 	}
 
+	public void setJar (URL url ) {
+		Jar jar = null;
+		try {
+			jar = new Jar(url.getPath());
+		} catch (IOException e) {
+			System.out.println("agent l138");
+			System.out.println(e);
+		}
+		this.jar = jar;
+	}
+	
 	/**
 	 * Action a effectuer sur le server de retour
 	 */

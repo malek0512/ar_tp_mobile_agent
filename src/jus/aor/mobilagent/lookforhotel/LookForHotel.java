@@ -1,7 +1,5 @@
 package jus.aor.mobilagent.lookforhotel;
 
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -55,6 +53,8 @@ public class LookForHotel extends Agent{
 	public _Action findHotel = new _Action() {
 		private static final long serialVersionUID = 1L;
 		public void execute() {
+			if (jus.aor.mobilagent.kernel.Starter.DEBUG)
+				System.out.println("Agents asking service : Hotels");
 			_Service<List<Hotel>> service = (_Service<List<Hotel>>) agentServer.getService("Hotels");
 			hotels.addAll(service.call(new Object[]{localisation}));
 		}
@@ -63,13 +63,27 @@ public class LookForHotel extends Agent{
 	public _Action findTelephone = new _Action() {
 		private static final long serialVersionUID = 1L;
 		public void execute() {
+			System.out.println("Agents asking service : Telephones");
 			_Service<Numero> service = (_Service<Numero>) agentServer.getService("Telephones");
 			for(Hotel it : hotels)
 			{
 				numeros.add(service.call(it.name));
 			}
+			System.out.println("Here is the resultat of the search ");
+			for(int i=0; i<hotels.size(); i++) {
+				System.out.println("Hotel : "+hotels.get(i)+", "+"Number : "+numeros.get(i));
+			}
 		}
 	};
 	
+	protected _Action retour() {
+		return new _Action() {
+			
+			@Override
+			public void execute() {
+				System.out.println("Action retour de l'agent LookForHotel");
+			}
+		};
+	};
 	
 }

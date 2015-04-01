@@ -24,8 +24,11 @@ public class Annuaire implements _Annuaire, _Service<Numero>{
  * @author alex
  * @param fileParam
  */
-public Annuaire(String file)
+public Annuaire(Object... args)
 {
+	annuaire = new HashMap<String, Numero>();
+	String file =  (String) args[0];
+	System.out.println("Opening file : "+file);
 	/* Récupération de l'annuaire dans le fichier xml */
 	DocumentBuilder docBuilder = null;
 	Document doc=null;
@@ -37,11 +40,9 @@ public Annuaire(String file)
 		System.out.println("Annuaire l42");
 		System.out.println(e);
 	}
-	
 	String name, numero;
 	NodeList list = doc.getElementsByTagName("Telephone");
 	NamedNodeMap attrs;
-	
 	/* acquisition de toutes les entrées de l'annuaire */
 	for(int i =0; i<list.getLength();i++) {
 		attrs = list.item(i).getAttributes();
@@ -63,9 +64,9 @@ public Numero get(String abonne) {
 	while (iterator.hasNext())
 	{
 		res = iterator.next();
-		if(res.toString() == abonne)
+		if(res.toString().compareTo(abonne)==0)
 		{
-			break;
+			return res;
 		}
 	}
 	return res;
@@ -75,14 +76,13 @@ public Numero get(String abonne) {
  * @param : 0 -> String : nom de l'hotel
  */
 @Override
-public Numero call(Object... params)
-		throws IllegalArgumentException {
+public Numero call(Object... params) throws IllegalArgumentException {
 	return get((String) params[0]);
 }
 
 @Override
 public String getServiceName() {
-	return "annuaire";
+	return "Telephones";
 }
 
 

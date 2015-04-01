@@ -20,8 +20,10 @@ public class BAMAgentClassLoader extends BAMServerClassLoader
 	//Une Map <classname, class>
 	protected Map<String, Class<?>> contents;
 	
-	//Une ref vvers le clasloader parent
+	//Une ref vvers le classloader parent
 	private ClassLoader parent = null;
+
+	static public boolean DEBUG = true;
 	
 	public BAMAgentClassLoader(URL[] urls) {
 		super(new URL[] {}); //Fake : to not allow the parent to have our classes
@@ -64,6 +66,8 @@ public class BAMAgentClassLoader extends BAMServerClassLoader
 	 */
 	@SuppressWarnings("deprecation")
 	public void addJar (Jar jar) {
+		if (DEBUG)
+			System.out.println("Adding Jar : " + jar.toString());
 		for (Iterator<?> it = jar.classIterator().iterator(); it.hasNext();) {
 			@SuppressWarnings("unchecked")
 			Entry<String, byte[]> entry = (Entry<String, byte[]>) it.next();
@@ -82,14 +86,25 @@ public class BAMAgentClassLoader extends BAMServerClassLoader
 	 * @author MAMMAR
 	 * @throws ClassNotFoundException 
 	 */
-	public Class<?> getClass(String classname) throws ClassNotFoundException {
-		classname = classname.replace('.', '/').concat(".class");
+	@Override
+	public Class<?> findClass(String classname) throws ClassNotFoundException {
 		
-		if(contents.containsKey(classname))
-			return contents.get(classname);
+		String classnameTmp = classname.replace('.', '/').concat(".class");
+		if (DEBUG )
+			System.out.println("Looking for class : "+classname+" --> "+classnameTmp);
+		
+		if(contents.containsKey(classnameTmp))
+			return contents.get(classnameTmp);
 		//if we have a parent loader let's ask him
 		else if (parent != null)
-			return parent.loadClass(classname);
-		throw new RuntimeException("No class of that name found : "+classname);
+			return parent.loadClass(classnameTmp);
+		
+		throw new ClassNotFoundException("No class of that name found : "+classnameTmp);
 	}
+	
+	@Override
+	public String toString() {
+		return "Loader : "+contents.toString();
+	}
+	
 }

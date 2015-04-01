@@ -38,21 +38,21 @@ public final class Server {
 	 */
 	public Server(final int port, final String name){
 		this.name=name;
+		this.port=port;
+		
 		try {
-			this.port=port;
 			/* mise en place du logger pour tracer l'application */
 			loggerName = "jus/aor/mobilagent/"+InetAddress.getLocalHost().getHostName()+"/"+this.name;
 			logger=Logger.getLogger(loggerName);
 			
-			//TODO vérifier si c'est tout ce qui y a à faire
 //			//On instancie un loader pour ce serveur
 //			loader = (BAMAgentClassLoader) new BAMServerClassLoader(new URL[]{});
 			loaderServer = new BAMAgentClassLoader(new URL[]{}, this.getClass().getClassLoader());
 			
-			
 			/* démarrage du server d'agents mobiles attaché à cette machine */
 			agentServer = new AgentServer(name, port, loaderServer);
 			agentServer.start();
+			
 			/* temporisation de mise en place du server d'agents */
 			Thread.sleep(1000);
 		}catch(Exception ex){
@@ -75,29 +75,23 @@ public final class Server {
 	 */
 	public final void addService(String name, String classeName, String codeBase, Object... args) {
 		try {
-			//TODO
 			//Logger
-			System.out.println(" Adding a service ");
+			System.out.println(" Adding a service : " + name);
 			logger.log(Level.FINE," Adding a service ");
+
 			//On charge le code du service dans le BAMServerClassLoader
+			//Path vers le JAR
 			String jarPath = "file:///"+System.getProperty("user.dir")+codeBase;
-			
-			//loader.addJar(new URL(jarPath));
-			
 			loaderServer.addJar(new URL(jarPath));
-			//System.out.println(loaderServer.toString());
-//			System.out.println();
-			//On recupere l'objet class de la classe className du Jar
-			@SuppressWarnings("rawtypes")
-			Class<?> serviceClass = Class.forName(classeName, true, loaderServer);
 			
-			//Class<?> serviceClass = loaderServer.getClass(classeName);
+			//On recupere l'objet class de la classe className du Jar
+			Class<?> serviceClass = Class.forName(classeName, true, loaderServer);
 			
 			//On instancie ce service au sein d'un objet de type _Service
 			_Service<?> service = (_Service<?>) serviceClass.getConstructor(Object[].class).newInstance(new Object[]{args});
 			//On ajoute le service a l'agentServer
-			agentServer.addService(service,classeName);
-			System.out.println("Travail term");
+			agentServer.addService(service,name);
+			
 		}catch(Exception ex){
 			System.out.println("server l88");
 			System.out.println(ex);
@@ -121,18 +115,21 @@ public final class Server {
 			//Logger
 			System.out.println(" Deploying an agent ");
 			logger.log(Level.FINE," Deploying an agent ");
+			//Path vers le JAR
 			String jarPath = "file:///"+System.getProperty("user.dir")+codeBase;
 			//Le deploiement d'un agent se fait sur un classLoader fils du classLOader actuel
-			BAMAgentClassLoader agentLoader = new BAMAgentClassLoader(new URL[]{},this.getClass().getClassLoader());
+			BAMAgentClassLoader agentLoader = new BAMAgentClassLoader(new URL[]{}, loaderServer);
 			agentLoader.addJar(new URL(jarPath));
+			//Chargement de l'objet classe
 			Class<?> agentClass = Class.forName(classeName, true, agentLoader);
-			System.out.println(" Agent deployed ");
-			System.out.println("coucou");
+			//Instanciation  de l'agent
 			Agent agent = (Agent) agentClass.getConstructor(Object[].class).newInstance(new Object[]{args});
-			System.out.println("Fin ");
-			agent.setJar(new Jar(System.getProperty("user.dir")+codeBase));
+			agent.setJar(new URL(jarPath)); //Mis a jour de la caisse a outils de l'agent
+			
+			//Initialisation de l'agent
 			agent.init(agentServer, "mobilagent://" + name + ":" + port +"/");
-			System.out.println("Fin ");
+
+			//Initialisation de la route a partir des actions en attribut de la classe
 			for(int i=0; i<etapeAddress.size(); i++) {
 				Field field = agentClass.getDeclaredField(etapeAction.get(i));
 				field.setAccessible(true);
@@ -144,8 +141,10 @@ public final class Server {
 				Etape etp =  new Etape(server, act);
 				agent.addEtape(etp);
 			}
-			System.out.println("Fin ");
+
+			
 			new Thread(agent).start();
+			System.out.println(" Agent deployed ");
 		}catch(Exception ex){
 			logger.log(Level.FINE," erreur durant le lancement du serveur"+this,ex);
 			System.out.println("Server : l127");

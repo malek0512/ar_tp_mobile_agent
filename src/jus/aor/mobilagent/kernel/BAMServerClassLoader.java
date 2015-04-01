@@ -26,5 +26,4 @@ public class BAMServerClassLoader extends URLClassLoader {
 		super.addURL(url);
 	}
 	
-	
 }
